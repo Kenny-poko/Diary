@@ -1,0 +1,44 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+// 追加
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
+
+class DiariesTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $diaries = [
+            [
+                'title'=>'初めてのセブ',
+                'body'=>'バロット食べれない',
+            ],
+            [
+                'title'=>'週末のオスロブ',
+                'body'=>'ジンベイザメでかい'
+            ],
+            [
+                'title'=>'卒業',
+                'body'=>'プレゼン無理'
+            ]
+        ];
+
+        foreach ($diaries as $diary){
+            // DBにデータを追加する
+            DB::table('diaries')->insert([
+                'title' => $diary['title'],
+                'body' => $diary['body'],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]);
+        }
+
+    }
+}
