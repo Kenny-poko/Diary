@@ -1,29 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/css/app.css"> 
-    <title>新規登録</title>
-</head>
-<body>
+@extends('layouts.php')
+
+@section('title','新規投稿')
+
+@section('content')
 <section class="container m-5">
     <div class="row justify-content-center">
         <div class="col-8">
-
-        <!-- エラーがある場合 -->
+            
+            <!-- エラーがある場合 -->
             @if($errors->any())
-                <ul>
-                    @foreach($errors->all() as $message)
-                        <li class = "alert alert-danger">
-                            {{$message}}
-                        </li>
-                    @endforeach 
-                </ul>
-
+            <ul>
+                @foreach($errors->all() as $message)
+                <li class = "alert alert-danger">
+                    {{$message}}
+                </li>
+                @endforeach 
+            </ul>
+            
             @endif
-
+            
             <form action="{{route('diary.create')}}" method="POST">
                 @csrf
                 <div class="form-group">
@@ -41,5 +36,5 @@
         </div>
     </div>
 </section>
-</body>
-</html>
+@endsection
+

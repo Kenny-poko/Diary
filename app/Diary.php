@@ -8,3 +8,6 @@ class Diary extends Model
 {
     //
 }
+
+
+

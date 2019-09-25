@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Diary;
 use App\Http\Requests\CreateDiary;
+use Illuminate\Support\Facades\Auth;
 
 class DiaryController extends Controller
 {
@@ -30,26 +31,89 @@ class DiaryController extends Controller
     // 新規追加の画面で投稿ボタンが押されたとき、投稿処理をするメソッド
     public function store(CreateDiary $request){
 
-        // ここからデータの登録処理
+        $diary = new Diary(); //Diaryモデルをインスタンス化
 
-        // Diaryモデルのインスタンスを取得
-        $diary = new Diary();
+        $diary->title = $request->title; //画面で入力されたタイトルを代入
+        $diary->body = $request->body; //画面で入力された本文を代入
+        $diary->user_id = Auth::user()->id; //追加 ログインしてるユーザーのidを保存
+        $diary->save(); //DBに保存
+    
+        return redirect()->route('diary.index'); //一覧ページにリダイレクト
 
-        // 画面で入力されたタイトルを代入
-        $diary->title = $request->title;
 
-        // 画面で入力された本文を代入
-        $diary->body = $request->body;
+        // // ここからデータの登録処理
 
-        $diary->save();  //DBに保存
+        // // Diaryモデルのインスタンスを取得
+        // $diary = new Diary();
 
-        // 一覧ページにリダイレクト
-        // 戻った時のフォームをさ送信しますか？をふせぐため
-        return redirect() ->route('diary.index');
+        // // 画面で入力されたタイトルを代入
+        // $diary->title = $request->title;
+
+        // // 画面で入力された本文を代入
+        // $diary->body = $request->body;
+
+        // $diary->user_id = Auth::user()->id;
+
+        // $diary->save();  //DBに保存
+
+        // // 一覧ページにリダイレクト
+        // // 戻った時のフォームをさ送信しますか？をふせぐため
+        // return redirect() ->route('diary.index');
     }
 
     // 削除を実行するメソッド
-    public function destroy(){
-        
+    public function destroy(int $id)
+    {
+        // dd($id);
+
+        // diaryモデルを使って、削除したいヨウ素の取得
+        $diary  = Diary::find($id);
+
+        // 取得した要素を削除
+        $diary->delete();
+
+        // 一覧画面に戻る
+        return redirect() ->route('diary.index');
     }
+
+    // 編集画面を表示するメソッド
+    public function edit(int $id)
+    {
+        // dd($id);  
+
+        // IDをもとに1件投稿を取得
+        $diary = Diary::find($id);
+
+        // dd($diary);
+        // 編集画面を表示する時、取得結果を渡す
+        return view('diaries.edit', [
+            'diary' =>$diary
+        ]);       
+    }
+
+    // 編集処理をするメソッド
+    public function update(CreateDiary $request, int $id)
+    {
+    // IDをもとに、投稿のタイトル、本文を更新
+
+     $diary = Diary::find($id);
+
+     // 画面で入力されたタイトルを代入
+     $diary->title = $request->title;
+
+     // 画面で入力された本文を代入
+     $diary->body = $request->body;
+
+     $diary->save();  //DBに保存
+
+     // 一覧ページにリダイレクト
+     // 戻った時のフォームをさ送信しますか？をふせぐため
+     return redirect() ->route('diary.index');
+
+    // 一覧ページにリダイレクト
+
+    }
+
+    
+
 }
